@@ -1,30 +1,36 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div>
+    <Navbar/>
+    <section class="section">
+      <router-view/>
+    </section>
   </div>
-  <router-view/>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Navbar from '@/components/layout/Navbar'
+import axios from 'axios'
 
-#nav {
-  padding: 30px;
+axios.defaults.baseURL = 'http://127.0.0.1:8000'
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
 
-    &.router-link-exact-active {
-      color: #42b983;
+export default {
+  name: 'App',
+  components: {
+    Navbar
+  },
+  beforeCreate() {
+    this.$store.commit('initalizeStore')
+
+    if(this.$store.state.token){
+      axios.defaults.headers.common['Authorization'] = "Token " + this.$store.state.token
+    } else {
+      axios.defaults.headers.common['Authorization'] = ''
     }
-  }
+  },
 }
+</script>
+
+<style lang="scss">
+  @import '../node_modules/bulma';
 </style>
